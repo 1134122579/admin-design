@@ -186,8 +186,18 @@ export const constantRoutes = [
           icon: "xq",
         },
       },
+      //   {
+      //     path: "sharearticleimageList",
+      //     component: () => import("@/views/essay/zsxqImage"),
+      //     name: "pyq",
+      //     meta: {
+      //       roles: ["admin"],
+      //       title: "知识星球图库",
+      //       icon: "xq",
+      //     },
+      //   },
       {
-        path: "分享集合",
+        path: "share",
         component: () => import("@/views/essay/share"),
         name: "share",
         meta: {
@@ -258,7 +268,7 @@ const createRouter = () =>
     scrollBehavior: () => ({
       y: 0,
     }),
-    // base: "/designvideo", // 加上这一行 测试环境不要加
+    base: "/designvideo", // 加上这一行 测试环境不要加
     routes: constantRoutes,
   });
 

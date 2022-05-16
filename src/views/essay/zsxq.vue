@@ -123,7 +123,7 @@
           <template slot-scope="{ row }">
             <el-popover placement="top" width="200" trigger="click">
               <vue-qr
-                :text="'http://api.skyorange.cn/starh5/?id=' + row.id"
+                :text="'http://api.skyorange.cn/starh5/detail?id=' + row.id"
                 :size="180"
               ></vue-qr>
               <el-button slot="reference" size="mini">扫码分享</el-button>
@@ -153,9 +153,9 @@
             <el-button type="primary" size="mini" @click="handleEdit(row)"
               >编辑</el-button
             >
-            <el-button type="danger" size="mini" @click="handleDel(row)"
+            <!-- <el-button type="danger" size="mini" @click="handleDel(row)"
               >删除</el-button
-            >
+            > -->
           </template>
         </el-table-column>
       </el-table>
@@ -501,6 +501,12 @@ export default {
       });
       this.$refs["fromdata"].validate((valid) => {
         if (valid) {
+          const loading = this.$loading({
+            lock: true,
+            text: "加载中",
+            spinner: "el-icon-loading",
+            background: "rgba(0, 0, 0, 0.7)",
+          });
           if (this.is_edit) {
             editPyq(this.form).then((res) => {
               this.dialogAddFormVisible = false;
@@ -509,6 +515,7 @@ export default {
                 type: "success",
               });
               this.getList();
+              loading.close();
             });
           } else {
             addPyq(this.form).then((res) => {
@@ -518,6 +525,7 @@ export default {
                 type: "success",
               });
               this.getList();
+              loading.close();
             });
           }
         }
