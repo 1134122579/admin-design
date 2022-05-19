@@ -247,7 +247,7 @@
             type="textarea"
             :rows="2"
             placeholder="请输入视频简介"
-            maxlength="50"
+            maxlength="100"
             show-word-limit
           />
         </el-form-item>

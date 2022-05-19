@@ -8,7 +8,7 @@
         label-width="100px"
         class="demo-form-inline"
       >
-        <el-form-item label="动态标题:">
+        <el-form-item label="动态文案:">
           <el-input
             v-model="listQuery.title"
             placeholder="请输入输入标题"
@@ -94,9 +94,15 @@
         </el-table-column>
         <el-table-column label="所属标签" align="center">
           <template slot-scope="{ row }">
-            <el-tag :type="row.label | typeFilter" size="small" effect="dark">{{
-              row.label | labelFilter
-            }}</el-tag>
+            <el-tag
+              v-for="item in row.label"
+              :key="item"
+              :type="item | typeFilter"
+              style="margin: 4px"
+              size="small"
+              effect="dark"
+              >{{ item | labelFilter }}</el-tag
+            >
           </template>
         </el-table-column>
         <el-table-column
@@ -183,13 +189,13 @@
         size="mini"
       >
         <div>
-          <el-form-item label="动态标题:" prop="title">
+          <el-form-item label="动态文案:" prop="title">
             <el-input
               type="textarea"
               rows="4"
               v-model="form.title"
               clearable
-              placeholder="请输入动态标题标题"
+              placeholder="请输入动态文案"
             />
           </el-form-item>
           <el-form-item label="分享标题:" prop="share_title">
@@ -220,12 +226,12 @@
         </el-form-item>
         <el-form-item label="所属标签:" prop="label">
           <!-- "精华", "建筑", "景观", "空间", "打卡" -->
-          <el-radio-group v-model="form.label" size="mini">
-            <el-radio-button label="1">精华</el-radio-button>
-            <el-radio-button label="2">建筑</el-radio-button>
-            <el-radio-button label="3">景观</el-radio-button>
-            <el-radio-button label="4">空间</el-radio-button>
-          </el-radio-group>
+          <el-checkbox-group v-model="form.label" size="mini">
+            <el-checkbox-button label="1">精华</el-checkbox-button>
+            <el-checkbox-button label="2">建筑</el-checkbox-button>
+            <el-checkbox-button label="3">景观</el-checkbox-button>
+            <el-checkbox-button label="4">空间</el-checkbox-button>
+          </el-checkbox-group>
         </el-form-item>
         <div>
           <el-form-item label="上传图集:" prop="imgs">
@@ -384,7 +390,7 @@ export default {
       fileList: [],
       form: {
         title: "",
-        label: 1,
+        label: [1],
         status: 1,
         imgs: [],
       }, //导入文件
@@ -496,6 +502,14 @@ export default {
     // 修改信息
     submitAddData() {
       console.log(this.form, "this.form");
+      let isupimg = this.form.imgs.every((item) => item.status == "success");
+      if (!isupimg) {
+        this.$message({
+          message: "图片上传中",
+          type: "warning",
+        });
+        return;
+      }
       this.form.imgs = this.form.imgs.map((item) => {
         return item.url;
       });
@@ -536,6 +550,9 @@ export default {
     handleEdit(row) {
       this.is_edit = true;
       this.form = JSON.parse(JSON.stringify(row));
+      this.form.label = Array.isArray(this.form.label)
+        ? this.form.label
+        : this.form.label.split(",");
       this.form.imgs = this.form.imgs.map((item) => {
         return {
           url: item,
@@ -549,7 +566,7 @@ export default {
       this.form = {
         title: "",
         status: "1",
-        label: 1,
+        label: ["1"],
         imgs: [],
         desc: "",
         share_title: "",
@@ -639,6 +656,9 @@ export default {
         this.listLoading = false;
         let list = response.data.result;
         this.list = list.map((item) => {
+          item.label = Array.isArray(item.label)
+            ? item.label
+            : item.label.split(",");
           return item;
         });
         this.total = response.data.pageInfo.total;

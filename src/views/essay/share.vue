@@ -110,10 +110,7 @@
           <template slot-scope="{ row }">
             <el-popover placement="top" width="200" trigger="click">
               <vue-qr
-                :text="
-                  'http://api.skyorange.cn/shareurl/index.html?article_id=' +
-                  row.id
-                "
+                :text="'http://api.skyorange.cn/shareurl/detail?id=' + row.id"
                 :size="180"
               ></vue-qr>
               <el-button slot="reference" size="mini">扫码分享</el-button>
